@@ -1,0 +1,28 @@
+{
+  "name": "@cors-unblock/web-content-extractor",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.6.0",
+    "@tanstack/solid-query": "^5.71.10",
+    "@types/turndown": "^5.0.5",
+    "@webext-core/messaging": "^2.2.0",
+    "cors-unblock": "workspace:^",
+    "solid-js": "^1.9.5",
+    "solid-toast": "^0.5.0",
+    "turndown": "^7.2.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.2",
+    "tailwindcss": "^4.1.2",
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0",
+    "vite-plugin-solid": "^2.11.2"
+  }
+}
