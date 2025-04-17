@@ -29,8 +29,8 @@ await fs.writeFile(
       `INFOPLIST_KEY_CFBundleDisplayName = "${ProjectName}";`,
       `INFOPLIST_KEY_CFBundleDisplayName = "${ProjectName}";\n				INFOPLIST_KEY_LSApplicationCategoryType = "${AppCategory}";`,
     )
-    // .replaceAll(
-    //   `COPY_PHASE_STRIP = NO;`,
-    //   `COPY_PHASE_STRIP = NO;\n				DEVELOPMENT_TEAM = ${DevelopmentTeam};`,
-    // ),
+    .replaceAll(
+      `COPY_PHASE_STRIP = NO;`,
+      `COPY_PHASE_STRIP = NO;\n				DEVELOPMENT_TEAM = ${DevelopmentTeam};`,
+    ),
 )

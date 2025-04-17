@@ -10,7 +10,7 @@ export default defineConfig({
   manifest: {
     name: 'CORS Unblock',
     description:
-      'Enable cross-origin requests for web applications with precise domain control and user-friendly permission management.',
+      'Web apps cross-origin access with precise domain control and simple permissions.',
     permissions: ['storage', 'tabs', 'declarativeNetRequest'],
     host_permissions: ['https://*/*', 'http://*/*'],
     web_accessible_resources: [
