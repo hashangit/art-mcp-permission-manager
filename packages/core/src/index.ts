@@ -13,8 +13,6 @@ export function hasInstall() {
 }
 
 export function install() {
-  window.open(
-    'https://chromewebstore.google.com/detail/odkadbffomicljkjfepnggiibcjmkogc',
-    '_blank',
-  )
+  location.href =
+    'https://chromewebstore.google.com/detail/odkadbffomicljkjfepnggiibcjmkogc'
 }

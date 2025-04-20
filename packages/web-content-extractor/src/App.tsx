@@ -28,6 +28,7 @@ function App() {
       }
 
       if (!hasInstall()) {
+        alert('Please install the CORS Unblock extension')
         install()
         throw new Error('Please install the CORS Unblock extension')
       }
