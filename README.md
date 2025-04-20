@@ -23,6 +23,21 @@ As a user, you don't need to do anything. If a Web application needs to use the 
 - **Lightweight design**: Minimize the impact on browsing performance
 - **Developer-friendly**: Provide simple APIs, developers can easily integrate
 
+## Privacy and Security
+
+CORS Unblock highly values user privacy and security. The plugin does not collect any user data and all operations are completed within the local browser. The permission system ensures that only websites that users have explicitly approved can use the extension's cross-domain capabilities, and these permissions can be revoked at any time.
+
+## Inspiration
+
+The design of CORS Unblock is inspired by [Shizuku](https://github.com/RikkaApps/Shizuku), a brilliant Android application that provides a centralized way to manage system API permissions. Shizuku allows applications to access system APIs through a proxy application, eliminating the need for each app to request root permissions individually.
+
+We've adapted this concept to the Web environment. Just as Shizuku acts as a permission manager for system APIs, CORS Unblock serves as a permission manager for cross-origin requests. This approach offers several advantages:
+
+- **Centralized Permission Management**: Users can manage all cross-origin request permissions in one place
+- **Enhanced Security**: Permissions are granted explicitly and can be revoked at any time
+- **Better User Experience**: No need for complex proxy server setups or CORS configurations
+- **Developer-Friendly**: Simple API integration for web applications
+
 ## Development
 
 Integrating CORS Unblock into your Web application is very simple. First, install our core library:
@@ -61,7 +76,3 @@ async function main() {
 Once the user grants permission, your application can seamlessly perform cross-domain requests without setting up complex proxy servers or CORS configurations.
 
 Example: <https://web-content-extractor.rxliuli.com/>
-
-## Privacy and Security
-
-CORS Unblock highly values user privacy and security. The plugin does not collect any user data and all operations are completed within the local browser. The permission system ensures that only websites that users have explicitly approved can use the extension's cross-domain capabilities, and these permissions can be revoked at any time.
