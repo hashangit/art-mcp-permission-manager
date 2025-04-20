@@ -60,6 +60,8 @@ async function main() {
 
 Once the user grants permission, your application can seamlessly perform cross-domain requests without setting up complex proxy servers or CORS configurations.
 
+Example: <https://web-content-extractor.rxliuli.com/>
+
 ## Privacy and Security
 
 CORS Unblock highly values user privacy and security. The plugin does not collect any user data and all operations are completed within the local browser. The permission system ensures that only websites that users have explicitly approved can use the extension's cross-domain capabilities, and these permissions can be revoked at any time.
