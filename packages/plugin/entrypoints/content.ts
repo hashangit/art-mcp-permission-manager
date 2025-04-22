@@ -1,5 +1,6 @@
 import { messaging } from '@/lib/messaging'
 import { internalMessaging } from 'cors-unblock/internal'
+import { isMobile } from 'is-mobile'
 
 export default defineContentScript({
   matches: ['<all_urls>'],
@@ -14,8 +15,11 @@ export default defineContentScript({
     )
     let _resolve: (action: 'accept' | 'reject') => void
     internalMessaging.onMessage('requestHosts', async (ev) => {
-      // TODO: https://bugzilla.mozilla.org/show_bug.cgi?id=1864284
-      if (import.meta.env.FIREFOX) {
+      if (
+        // TODO: https://bugzilla.mozilla.org/show_bug.cgi?id=1864284
+        import.meta.env.FIREFOX ||
+        isMobile({ tablet: true })
+      ) {
         const result = confirm(
           `Allow cross-origin requests to the following domains: ${ev.data.hosts.join(
             ', ',

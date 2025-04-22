@@ -15,7 +15,11 @@ function App() {
     }
   })
 
-  return <>{router.path() === '/' ? <Home /> : <Confirm />}</>
+  return (
+    <div class="w-full min-w-[400px] p-4 bg-white dark:bg-gray-800">
+      {router.path() === '/' ? <Home /> : <Confirm />}
+    </div>
+  )
 }
 
 export default App

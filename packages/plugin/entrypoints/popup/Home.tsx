@@ -69,7 +69,7 @@ export function Home() {
   })
 
   return (
-    <div class="w-[400px] p-4 bg-white dark:bg-gray-800">
+    <div>
       <div class="mb-4">
         <h1 class="text-xl font-bold text-gray-800 dark:text-gray-100">
           CORS Unblock
