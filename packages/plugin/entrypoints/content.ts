@@ -14,6 +14,21 @@ export default defineContentScript({
     )
     let _resolve: (action: 'accept' | 'reject') => void
     internalMessaging.onMessage('requestHosts', async (ev) => {
+      // TODO: https://bugzilla.mozilla.org/show_bug.cgi?id=1864284
+      if (import.meta.env.FIREFOX) {
+        const result = confirm(
+          `Allow cross-origin requests to the following domains: ${ev.data.hosts.join(
+            ', ',
+          )}?`,
+        )
+        if (result) {
+          await messaging.sendMessage('acceptRequestHosts', {
+            origin: location.origin,
+            hosts: ev.data.hosts,
+          })
+        }
+        return result ? 'accept' : 'reject'
+      }
       await messaging.sendMessage('requestHosts', {
         origin: location.origin,
         hosts: ev.data.hosts,
