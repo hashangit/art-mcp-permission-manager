@@ -7,6 +7,7 @@ import { toast, Toaster } from 'solid-toast'
 
 function App() {
   const [url, setUrl] = createSignal('')
+  let inputRef: HTMLInputElement | undefined
   const [hasExtracted, setHasExtracted] = createSignal(false)
   const [copyStatus, setCopyStatus] = createSignal<'idle' | 'copied'>('idle')
 
@@ -75,7 +76,7 @@ function App() {
 
   const handleSubmit = (e: Event) => {
     e.preventDefault()
-    extractMutation.mutate(url())
+    extractMutation.mutate(inputRef?.value ?? '')
   }
 
   const handleCopy = async () => {
@@ -87,7 +88,6 @@ function App() {
 
   return (
     <div class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
-      <Toaster />
       <div
         class={`w-full bg-white dark:bg-gray-800 transition-all duration-300 ${
           hasExtracted()
@@ -101,11 +101,16 @@ function App() {
               <h1 class="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8 text-center text-gray-900 dark:text-white">
                 Web Content Extractor
               </h1>
-              <form onSubmit={handleSubmit} class="w-full flex flex-col sm:flex-row gap-3">
+              <form
+                onSubmit={handleSubmit}
+                class="w-full flex flex-col sm:flex-row gap-3"
+              >
                 <input
                   type="url"
+                  ref={inputRef}
                   value={url()}
                   onInput={(e) => setUrl(e.currentTarget.value)}
+                  onChange={(e) => setUrl(e.currentTarget.value)}
                   placeholder="Enter URL to extract content..."
                   class="flex-1 px-4 py-3 border dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white dark:placeholder-gray-400"
                   required
@@ -125,11 +130,16 @@ function App() {
             <h1 class="text-2xl sm:text-3xl font-bold mb-4 text-center text-gray-900 dark:text-white">
               Web Content Extractor
             </h1>
-            <form onSubmit={handleSubmit} class="flex flex-col sm:flex-row gap-3">
+            <form
+              onSubmit={handleSubmit}
+              class="flex flex-col sm:flex-row gap-3"
+            >
               <input
                 type="url"
+                ref={inputRef}
                 value={url()}
                 onInput={(e) => setUrl(e.currentTarget.value)}
+                onChange={(e) => setUrl(e.currentTarget.value)}
                 placeholder="Enter URL to extract content..."
                 class="flex-1 px-4 py-2 border dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white dark:placeholder-gray-400"
                 required
@@ -185,6 +195,8 @@ function App() {
           </div>
         </div>
       )}
+
+      <Toaster />
     </div>
   )
 }
