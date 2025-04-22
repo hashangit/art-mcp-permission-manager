@@ -58,7 +58,7 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - name: Install dependencies
-        run: pnpm install && pnpm setup-all
+        run: pnpm install && pnpm init-all
       - name: Zip extensions
         run: pnpm run zip && pnpm run zip:firefox
         working-directory: ${{ env.PACKAGE_PATH }}
