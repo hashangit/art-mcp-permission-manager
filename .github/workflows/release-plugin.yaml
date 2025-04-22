@@ -1,6 +1,6 @@
 env:
   DIRECTORY: packages/plugin/.output
-  PROJECT_NAME: plugin
+  PROJECT_NAME: cors-unblock
   PACKAGE_PATH: packages/plugin
 
 name: Release Plugin
