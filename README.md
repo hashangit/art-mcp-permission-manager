@@ -7,9 +7,10 @@ CORS Unblock is a browser extension that provides additional capabilities for We
 ## Installation
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/odkadbffomicljkjfepnggiibcjmkogc)
-<!-- - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/cors-unblock/)
-- [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/cors-unblock/hjgjgjgjgjgjgjgjgjgjgjgjgjgjgjgj)
-- [Safari Web Extensions](https://developer.apple.com/safari/extensions/) -->
+- [Firefox Add-ons](https://addons.mozilla.org/zh-CN/firefox/addon/cors-unblock2/)
+- [Safari Web Extensions](https://apps.apple.com/cn/app/cors-unblock/id6744779652)
+
+<!-- - [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/cors-unblock/hjgjgjgjgjgjgjgjgjgjgjgjgjgjgjgj) -->
 
 ## Usage
 
