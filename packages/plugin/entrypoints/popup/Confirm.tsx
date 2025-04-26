@@ -2,6 +2,7 @@ import { useMutation } from '@/lib'
 import { messaging } from '@/lib/messaging'
 import { useRouter } from '../../lib/router'
 import { popupStore, ConfirmState } from '@/lib/store'
+import { createSignal, onMount } from 'solid-js'
 
 export function Confirm() {
   const router = useRouter()
