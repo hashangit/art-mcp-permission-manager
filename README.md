@@ -1,5 +1,7 @@
 # CORS Unblock
 
+[Chrome](https://chromewebstore.google.com/detail/cors-unblock/odkadbffomicljkjfepnggiibcjmkogc), [Firefox](https://addons.mozilla.org/zh-CN/firefox/addon/cors-unblock2/), [Safari](https://apps.apple.com/cn/app/cors-unblock/id6744779652)
+
 ## Introduction
 
 CORS Unblock is a browser extension that provides additional capabilities for Web applications. Compared to Native applications, one of the most lacking features of modern Web applications is the ability to make cross-domain requests. CORS Unblock addresses this by rewriting the Response Header in the browser, enabling Web applications to access cross-domain resources.
