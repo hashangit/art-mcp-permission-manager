@@ -19,22 +19,24 @@ async function updateProjectConfig() {
   )
   const packageJson = await import(path.resolve(rootPath, 'package.json'))
   const content = await fs.readFile(projectConfigPath, 'utf-8')
-  await fs.writeFile(
-    projectConfigPath,
-    content
-      .replaceAll(
-        'MARKETING_VERSION = 1.0;',
-        `MARKETING_VERSION = ${packageJson.version};`,
-      )
-      .replaceAll(
-        `INFOPLIST_KEY_CFBundleDisplayName = "${ProjectName}";`,
-        `INFOPLIST_KEY_CFBundleDisplayName = "${ProjectName}";\n				INFOPLIST_KEY_LSApplicationCategoryType = "${AppCategory}";`,
-      )
-      .replaceAll(
-        `COPY_PHASE_STRIP = NO;`,
-        `COPY_PHASE_STRIP = NO;\n				DEVELOPMENT_TEAM = ${DevelopmentTeam};`,
-      ),
+  const newContent = content
+    .replaceAll(
+      'MARKETING_VERSION = 1.0;',
+      `MARKETING_VERSION = ${packageJson.version};`,
+    )
+    .replaceAll(
+      `INFOPLIST_KEY_CFBundleDisplayName = "${ProjectName}";`,
+      `INFOPLIST_KEY_CFBundleDisplayName = "${ProjectName}";\n				INFOPLIST_KEY_LSApplicationCategoryType = "${AppCategory}";`,
+    )
+    .replaceAll(
+      `COPY_PHASE_STRIP = NO;`,
+      `COPY_PHASE_STRIP = NO;\n				DEVELOPMENT_TEAM = ${DevelopmentTeam};`,
+    )
+  .replace(
+    /CURRENT_PROJECT_VERSION = \d+;/g,
+    `CURRENT_PROJECT_VERSION = ${parseProjectVersion(packageJson.version)};`,
   )
+  await fs.writeFile(projectConfigPath, newContent)
 }
 
 async function updateInfoPlist() {
@@ -48,10 +50,15 @@ async function updateInfoPlist() {
       path.resolve(projectPath, file),
       content.replaceAll(
         '</dict>\n</plist>',
-        '	<key>CFBundleVersion</key>\n	<string>$(MARKETING_VERSION)</string>\n</dict>\n</plist>',
+        '	<key>CFBundleVersion</key>\n	<string>$(CURRENT_PROJECT_VERSION)</string>\n</dict>\n</plist>',
       ),
     )
   }
+}
+
+function parseProjectVersion(version: string) {
+  const [major, minor, patch] = version.split('.').map(Number)
+  return major * 10000 + minor * 100 + patch
 }
 
 await updateProjectConfig()
