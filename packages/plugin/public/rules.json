@@ -1,60 +1,126 @@
 [
   {
-    "id": 1,
-    "priority": 1,
-    "action": {
-      "type": "modifyHeaders",
-      "responseHeaders": [
-        {
-          "header": "Access-Control-Allow-Origin",
-          "operation": "set",
-          "value": "http://localhost:5173"
-        },
-        {
-          "header": "Access-Control-Allow-Methods",
-          "operation": "set",
-          "value": "GET, POST, OPTIONS, PUT, DELETE"
-        },
-        {
-          "header": "Access-Control-Allow-Headers",
-          "operation": "set",
-          "value": "Content-Type"
-        }
-      ]
-    },
-    "condition": {
-      "requestDomains": ["example.com"],
-      "initiatorDomains": ["localhost"],
-      "resourceTypes": ["xmlhttprequest"]
-    }
+      "action": {
+          "responseHeaders": [
+              {
+                  "header": "Access-Control-Allow-Origin",
+                  "operation": "set",
+                  "value": "*"
+              },
+              {
+                  "header": "Access-Control-Allow-Methods",
+                  "operation": "set",
+                  "value": "PUT, GET, HEAD, POST, DELETE, OPTIONS"
+              },
+              {
+                  "header": "Access-Control-Allow-Headers",
+                  "operation": "set",
+                  "value": "*"
+              },
+              {
+                  "header": "Access-Control-Allow-Credentials",
+                  "operation": "set",
+                  "value": "true"
+              }
+          ],
+          "type": "modifyHeaders"
+      },
+      "condition": {
+          "excludedInitiatorDomains": [],
+          "urlFilter": "*"
+      },
+      "id": 1,
+      "priority": 1
   },
   {
-    "id": 2,
-    "priority": 1,
-    "action": {
-      "type": "modifyHeaders",
-      "responseHeaders": [
-        {
-          "header": "Access-Control-Allow-Origin",
-          "operation": "set",
-          "value": "https://x.com"
-        },
-        {
-          "header": "Access-Control-Allow-Methods",
-          "operation": "set",
-          "value": "GET, POST, OPTIONS, PUT, DELETE"
-        },
-        {
-          "header": "Access-Control-Allow-Headers",
-          "operation": "set",
-          "value": "Content-Type"
-        }
-      ]
-    },
-    "condition": {
-      "initiatorDomains": ["https://x.com"],
-      "requestDomains": ["https://x.com"],
-      "resourceTypes": ["xmlhttprequest"]
-    }
+      "action": {
+          "responseHeaders": [
+              {
+                  "header": "Allow",
+                  "operation": "set",
+                  "value": "PATCH"
+              },
+              {
+                  "header": "Access-Control-Allow-Headers",
+                  "operation": "append",
+                  "value": "Content-Type"
+              },
+              {
+                  "header": "Access-Control-Allow-Methods",
+                  "operation": "append",
+                  "value": "PUT, GET, HEAD, POST, DELETE, OPTIONS, PATCH"
+              }
+          ],
+          "type": "modifyHeaders"
+      },
+      "condition": {
+          "excludedInitiatorDomains": [],
+          "requestMethods": [
+              "options"
+          ],
+          "urlFilter": "*"
+      },
+      "id": 2,
+      "priority": 1
+  },
+  {
+      "action": {
+          "responseHeaders": [
+              {
+                  "header": "Access-Control-Allow-Origin",
+                  "operation": "set",
+                  "value": "https://console.firebase.google.com"
+              }
+          ],
+          "type": "modifyHeaders"
+      },
+      "condition": {
+          "initiatorDomains": [
+              "console.firebase.google.com"
+          ],
+          "urlFilter": "*"
+      },
+      "id": 19937,
+      "priority": 2
+  },
+  {
+      "action": {
+          "responseHeaders": [
+              {
+                  "header": "Access-Control-Allow-Origin",
+                  "operation": "set",
+                  "value": "https://console.firebase.google.com"
+              }
+          ],
+          "type": "modifyHeaders"
+      },
+      "condition": {
+          "initiatorDomains": [
+              "console.firebase.google.com"
+          ],
+          "urlFilter": "*"
+      },
+      "id": 19950,
+      "priority": 2
+  },
+  {
+      "action": {
+          "responseHeaders": [
+              {
+                  "header": "Access-Control-Allow-Origin",
+                  "operation": "set",
+                  "value": "https://accounts.google.com"
+              }
+          ],
+          "type": "modifyHeaders"
+      },
+      "condition": {
+          "initiatorDomains": [
+              "accounts.google.com"
+          ],
+          "urlFilter": "*"
+      },
+      "id": 19988,
+      "priority": 2
   }
 ]

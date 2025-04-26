@@ -1,5 +1,7 @@
-import { dbApi, Rule } from '@/lib/db'
+import { dbApi } from '@/lib/db'
 import { messaging } from '@/lib/messaging'
+import { findRule } from '@/lib/rules'
+import { deleteByOrigin } from '@/lib/rules'
 import { deserializeRequest, serializeResponse } from '@/lib/serialize'
 import { popupStore } from '@/lib/store'
 import { omit, uniq } from 'es-toolkit'
@@ -20,6 +22,7 @@ async function getRuleId() {
 type RuleActionType = Browser.declarativeNetRequest.RuleActionType
 type HeaderOperation = Browser.declarativeNetRequest.HeaderOperation
 type ResourceType = Browser.declarativeNetRequest.ResourceType
+type DomainType = Browser.declarativeNetRequest.DomainType
 type EnumValues<T extends string> = `${T}`
 
 function createRule(
@@ -27,8 +30,22 @@ function createRule(
   origin: string,
   hosts?: string[],
 ): Browser.declarativeNetRequest.Rule {
+  const condition: Browser.declarativeNetRequest.RuleCondition = {
+    initiatorDomains: [new URL(origin).hostname],
+    resourceTypes: [
+      'xmlhttprequest' satisfies EnumValues<ResourceType> as ResourceType,
+      'image' satisfies EnumValues<ResourceType> as ResourceType,
+    ],
+    domainType: 'thirdParty' satisfies EnumValues<DomainType> as DomainType,
+  }
+  if (hosts) {
+    condition.requestDomains = hosts
+  } else {
+    condition.urlFilter = '*'
+  }
   return {
     id: ruleId,
+    priority: 1,
     action: {
       type: 'modifyHeaders' satisfies EnumValues<RuleActionType> as RuleActionType,
       responseHeaders: [
@@ -42,57 +59,23 @@ function createRule(
           header: 'Access-Control-Allow-Methods',
           operation:
             'set' satisfies EnumValues<HeaderOperation> as HeaderOperation,
-          value: 'GET, POST, OPTIONS, PUT, DELETE',
+          value: 'PUT, GET, HEAD, POST, DELETE, OPTIONS',
         },
         {
           header: 'Access-Control-Allow-Headers',
           operation:
             'set' satisfies EnumValues<HeaderOperation> as HeaderOperation,
-          value: 'Content-Type',
+          value: '*',
+        },
+        {
+          header: 'Access-Control-Allow-Credentials',
+          value: 'true',
+          operation:
+            'set' satisfies EnumValues<HeaderOperation> as HeaderOperation,
         },
       ],
     },
-    condition: hosts
-      ? {
-          initiatorDomains: [new URL(origin).hostname],
-          requestDomains: hosts,
-          resourceTypes: [
-            'xmlhttprequest' satisfies EnumValues<ResourceType> as ResourceType,
-          ],
-        }
-      : {
-          initiatorDomains: [new URL(origin).hostname],
-          urlFilter: '|https*',
-          resourceTypes: [
-            'xmlhttprequest' satisfies EnumValues<ResourceType> as ResourceType,
-          ],
-        },
-  }
-}
-
-const findRule = async (
-  origin: string,
-): Promise<
-  | (Browser.declarativeNetRequest.Rule & {
-      meta: Rule
-    })
-  | undefined
-> => {
-  const meta = await dbApi.meta.getByOrigin(origin)
-  if (!meta) {
-    return
-  }
-  const host = new URL(origin).hostname
-  const rules = await browser.declarativeNetRequest.getDynamicRules()
-  const browserRule = rules.find(
-    (rule) => rule.condition.initiatorDomains?.[0] === host,
-  )
-  if (!browserRule) {
-    return
-  }
-  return {
-    meta,
-    ...browserRule,
+    condition,
   }
 }
 
@@ -109,14 +92,14 @@ async function log(msg: string) {
 
 export default defineBackground(() => {
   browser.runtime.onInstalled.addListener(async () => {
-    const oldRules = await browser.declarativeNetRequest.getDynamicRules()
-    await browser.declarativeNetRequest.updateDynamicRules({
+    const oldRules = await browser.declarativeNetRequest.getSessionRules()
+    await browser.declarativeNetRequest.updateSessionRules({
       removeRuleIds: oldRules.map((rule) => rule.id),
     })
     const rules = await dbApi.meta.getAll()
     let ruleId = 1
     try {
-      await browser.declarativeNetRequest.updateDynamicRules({
+      await browser.declarativeNetRequest.updateSessionRules({
         addRules: rules.map((rule) =>
           createRule(ruleId++, rule.origin, rule.hosts),
         ),
@@ -153,7 +136,7 @@ export default defineBackground(() => {
     }
     const ruleId = await getRuleId()
     const newRule = createRule(ruleId, ev.data.origin)
-    await browser.declarativeNetRequest.updateDynamicRules({
+    await browser.declarativeNetRequest.updateSessionRules({
       addRules: [newRule],
     })
     await dbApi.meta.add({
@@ -178,7 +161,7 @@ export default defineBackground(() => {
           ...(rule.meta.hosts ?? []),
           ...ev.data.hosts,
         ])
-        await browser.declarativeNetRequest.updateDynamicRules({
+        await browser.declarativeNetRequest.updateSessionRules({
           removeRuleIds: [rule.id],
           addRules: [omit(rule, ['meta'])],
         })
@@ -188,7 +171,7 @@ export default defineBackground(() => {
           updatedAt: new Date().toISOString(),
         })
       } else {
-        await browser.declarativeNetRequest.updateDynamicRules({
+        await browser.declarativeNetRequest.updateSessionRules({
           addRules: [
             createRule(await getRuleId(), ev.data.origin, ev.data.hosts),
           ],
@@ -237,15 +220,11 @@ export default defineBackground(() => {
     })
   })
   messaging.onMessage('delete', async (ev) => {
-    const rule = await findRule(ev.data.origin)
-    if (!rule) {
-      return
-    }
-    await browser.declarativeNetRequest.updateDynamicRules({
-      removeRuleIds: [rule.id],
-    })
-    await dbApi.meta.delete(rule.meta.id)
+    await deleteByOrigin(ev.data.origin)
     setIcon()
+  })
+  messaging.onMessage('getAllRules', async () => {
+    return await dbApi.meta.getAll()
   })
   messaging.onMessage('request', async (ev) => {
     const rule = await findRule(ev.data.origin)
