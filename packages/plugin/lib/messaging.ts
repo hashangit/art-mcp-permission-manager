@@ -1,5 +1,6 @@
 import { defineExtensionMessaging } from '@webext-core/messaging'
 import { SerializedRequest, SerializedResponse } from './serialize'
+import { Rule } from './db'
 
 export interface ContentScript2BackgroundMessage {
   getAllowedInfo(data: { origin: string }): {
@@ -13,9 +14,12 @@ export interface ContentScript2BackgroundMessage {
   rejectRequestHosts(data: { origin: string; hosts: string[] }): void
   requestAllHosts(data: { origin: string }): void
   delete(data: { origin: string }): void
+  getAllRules(): Rule[]
 
+  // test
   ping(): string
 
+  // safari only
   request(req: SerializedRequest & { origin: string }): SerializedResponse
 }
 

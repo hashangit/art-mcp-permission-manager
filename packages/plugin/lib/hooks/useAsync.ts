@@ -28,8 +28,8 @@ export function useAsync<T>(options: { queryFn: () => Promise<T> }): {
   }
 }
 
-export function useMutation<T>(options: { mutationFn: () => Promise<T> }): {
-  mutate: () => void
+export function useMutation<T, Args extends any[]>(options: { mutationFn: (...args: Args) => Promise<T> }): {
+  mutate: (...args: Args) => void
   value: Accessor<T | undefined>
   error: Accessor<Error | undefined>
   loading: Accessor<boolean>
@@ -38,10 +38,10 @@ export function useMutation<T>(options: { mutationFn: () => Promise<T> }): {
   const [error, setError] = createSignal<Error | undefined>(undefined)
   const [loading, setLoading] = createSignal(false)
 
-  function mutate() {
+  function mutate(...args: Args) {
     setLoading(true)
     options
-      .mutationFn()
+      .mutationFn(...args)
       .then(setValue)
       .catch(setError)
       .finally(() => setLoading(false))

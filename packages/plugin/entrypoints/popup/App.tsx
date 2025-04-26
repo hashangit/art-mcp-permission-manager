@@ -4,7 +4,7 @@ import { useRouter } from '../../lib/router'
 import { onMount } from 'solid-js'
 import { popupStore } from '@/lib/store'
 
-function App() {
+export function App() {
   const router = useRouter()
   onMount(async () => {
     const requestHosts = await popupStore.getParams()
@@ -21,5 +21,3 @@ function App() {
     </div>
   )
 }
-
-export default App
