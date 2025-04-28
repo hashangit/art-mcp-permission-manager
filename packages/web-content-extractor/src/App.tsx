@@ -16,6 +16,29 @@ function App() {
     codeBlockStyle: 'fenced',
   })
 
+  // Check for 'p' parameter on initial load
+  createEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const targetUrl = params.get('p')
+    if (targetUrl && isValidUrl(targetUrl)) {
+      setUrl(targetUrl)
+      if (inputRef) {
+        inputRef.value = targetUrl
+      }
+      extractMutation.mutate(targetUrl)
+    }
+  })
+
+  // Helper function to validate URL
+  const isValidUrl = (urlString: string) => {
+    try {
+      new URL(urlString)
+      return true
+    } catch {
+      return false
+    }
+  }
+
   createEffect(() => {
     if (extractMutation.data) {
       setHasExtracted(true)
