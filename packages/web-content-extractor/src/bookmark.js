@@ -1,0 +1,1 @@
+javascript:open('https://web-content-extractor.rxliuli.com/?p='+encodeURIComponent(window.location.href),'_blank');
