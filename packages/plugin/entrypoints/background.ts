@@ -90,24 +90,28 @@ async function log(msg: string) {
   // messaging.sendMessage('log', '[background] ' + msg, { tabId: tab.id! })
 }
 
-export default defineBackground(() => {
-  browser.runtime.onInstalled.addListener(async () => {
-    const oldRules = await browser.declarativeNetRequest.getSessionRules()
-    await browser.declarativeNetRequest.updateSessionRules({
-      removeRuleIds: oldRules.map((rule) => rule.id),
-    })
-    const rules = await dbApi.meta.getAll()
-    let ruleId = 1
-    try {
-      await browser.declarativeNetRequest.updateSessionRules({
-        addRules: rules.map((rule) =>
-          createRule(ruleId++, rule.origin, rule.hosts),
-        ),
-      })
-    } finally {
-      await browser.storage.local.set({ ruleId })
-    }
+async function onInit() {
+  console.log('[background] onInit')
+  const oldRules = await browser.declarativeNetRequest.getSessionRules()
+  await browser.declarativeNetRequest.updateSessionRules({
+    removeRuleIds: oldRules.map((rule) => rule.id),
   })
+  const rules = await dbApi.meta.getAll()
+  let ruleId = 1
+  try {
+    await browser.declarativeNetRequest.updateSessionRules({
+      addRules: rules.map((rule) =>
+        createRule(ruleId++, rule.origin, rule.hosts),
+      ),
+    })
+  } finally {
+    await browser.storage.local.set({ ruleId })
+  }
+}
+
+export default defineBackground(() => {
+  browser.runtime.onStartup.addListener(onInit)
+  browser.runtime.onInstalled.addListener(onInit)
 
   messaging.onMessage('ping', async (ev) => {
     messaging.sendMessage('log', 'ping', ev.sender.tab.id)
