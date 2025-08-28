@@ -1,73 +1,52 @@
-# CORS Unblock
+# ART MCP Permission Manager (CORS Unblock fork)
 
-[Chrome Web Store](https://chromewebstore.google.com/detail/odkadbffomicljkjfepnggiibcjmkogc) [Firefox Add-ons](https://addons.mozilla.org/zh-CN/firefox/addon/cors-unblock2/) [Safari Web Extensions](https://apps.apple.com/cn/app/cors-unblock/id6744779652)
+[Chrome Web Store](https://chromewebstore.google.com/detail/odkadbffomicljkjfepnggiibcjmkogc) · [Firefox Add-ons](https://addons.mozilla.org/zh-CN/firefox/addon/cors-unblock2/) · [Safari Web Extensions](https://apps.apple.com/cn/app/cors-unblock/id6744779652)
 
 ## Introduction
 
-CORS Unblock is a browser extension that provides additional capabilities for Web applications. Compared to Native applications, one of the most lacking features of modern Web applications is the ability to make cross-domain requests. CORS Unblock addresses this by rewriting the Response Header in the browser, enabling Web applications to access cross-domain resources.
+This repository is a fork of CORS Unblock tailored for ART, an Agentic AI application development framework for building client‑side, browser‑only AI agent apps. The extension becomes ART’s built‑in MCP server permission manager: it grants or revokes cross‑origin permissions for MCP server domains, letting end users control which MCP servers an ART app may access.
 
-## Usage
+## What it provides
 
-As a user, you don't need to do anything. If a Web application needs to use the capabilities of CORS Unblock, it will automatically prompt you to install or request specific permissions. CORS Unblock adopts a design principle of clear permissions and on-demand authorization, ensuring that you have full control over cross-domain requests in the browser.
+- **Managed CORS permissions for MCP servers**: Per‑origin, per‑domain rules
+- **Simple integration**: Exposed via the ART framework, no manual wiring for app developers
+- **User control**: Clear prompts and easy management from the extension popup
 
-### Main Features
+## Developer experience (via ART)
 
-- **Precise domain name permission control**: Only allow specific websites to access external APIs you have approved
-- **Simple permission management**: A clear user interface for managing authorized domains and permissions
-- **Security-first**: Does not collect user data, all operations are completed within the local browser
-- **Lightweight design**: Minimize the impact on browsing performance
-- **Developer-friendly**: Provide simple APIs, developers can easily integrate
+ART integrates this module internally. If your ART app enables MCP support, ART uses the core SDK to:
 
-## Privacy and Security
+- Detect whether the extension is installed
+- Prompt users to install the extension (opens the store in a new tab)
+- Request specific MCP server host permissions on demand
 
-CORS Unblock highly values user privacy and security. The plugin does not collect any user data and all operations are completed within the local browser. The permission system ensures that only websites that users have explicitly approved can use the extension's cross-domain capabilities, and these permissions can be revoked at any time.
+You generally do not import this library directly in ART apps; the framework handles it.
 
-## Inspiration
-
-The design of CORS Unblock is inspired by [Shizuku](https://github.com/RikkaApps/Shizuku), a brilliant Android application that provides a centralized way to manage system API permissions. Shizuku allows applications to access system APIs through a proxy application, eliminating the need for each app to request root permissions individually.
-
-We've adapted this concept to the Web environment. Just as Shizuku acts as a permission manager for system APIs, CORS Unblock serves as a permission manager for cross-origin requests. This approach offers several advantages:
-
-- **Centralized Permission Management**: Users can manage all cross-origin request permissions in one place
-- **Enhanced Security**: Permissions are granted explicitly and can be revoked at any time
-- **Better User Experience**: No need for complex proxy server setups or CORS configurations
-- **Developer-Friendly**: Simple API integration for web applications
-
-## Development
-
-Integrating CORS Unblock into your Web application is very simple. First, install our core library:
-
-```bash
-pnpm i cors-unblock
-```
-
-Then use it in your code:
+## Core SDK usage (for non‑ART adopters)
 
 ```ts
-import { hasInstall, install, getAllowedInfo, requestHosts } from 'cors-unblock'
+import { hasInstall, install, getAllowedInfo, requestHosts, getInstallUrl } from 'art-mcp-permissions-manager'
 
-async function main() {
+async function ensurePermission() {
   if (!hasInstall()) {
-    alert('Please install CORS Unblock plugin')
-    install()
+    // Opens store link in a new tab without leaving the current app tab
+    const opened = install({ browser: 'auto' })
+    if (!opened) {
+      // Popup blocked – show a fallback link
+      const url = getInstallUrl()
+      console.log('Open this link manually:', url)
+    }
     return
   }
-  const allowedInfo = await getAllowedInfo()
-  if (allowedInfo.enabled) {
-    return
-  }
-  const result = await requestHosts({
-    hosts: ['example.com'],
-  })
-  if (result !== 'accept') {
-    alert('Please allow CORS Unblock plugin to access example.com')
-    return
-  }
-  alert('Request permission success')
-  // Use CORS Unblock's ability
+  const allowed = await getAllowedInfo()
+  if (allowed.enabled) return
+  const result = await requestHosts({ hosts: ['mcp.example.com'] })
+  if (result !== 'accept') return
 }
 ```
 
-Once the user grants permission, your application can seamlessly perform cross-domain requests without setting up complex proxy servers or CORS configurations.
+## Notes
 
-Example: <https://web-content-extractor.rxliuli.com/>
+- Permissions are scoped to the requesting website’s origin.
+- Users can enable “all domains” for an origin or restrict to specific MCP server hosts.
+- No user data is collected; all operations run locally in the browser.
