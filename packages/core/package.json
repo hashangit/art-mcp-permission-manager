@@ -12,7 +12,8 @@
     "./internal": "./src/internal.ts"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
     "init": "pnpm build",

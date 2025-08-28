@@ -25,7 +25,7 @@ You generally do not import this library directly in ART apps; the framework han
 ## Core SDK usage (for non‑ART adopters)
 
 ```ts
-import { hasInstall, install, getAllowedInfo, requestHosts, getInstallUrl } from 'art-mcp-permissions-manager'
+import { hasInstall, install, getAllowedInfo, requestHosts, getInstallUrl } from 'art-mcp-permission-manager'
 
 async function ensurePermission() {
   if (!hasInstall()) {
