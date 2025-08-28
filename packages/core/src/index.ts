@@ -9,7 +9,11 @@ export function requestHosts(data: { hosts: string[] }) {
 }
 
 export function hasInstall() {
-  return document.documentElement.dataset.corsUnblock
+  return (
+    document.documentElement.dataset.artMcpPermissionManager ||
+    // Backward compat with older content scripts during transition
+    document.documentElement.dataset.corsUnblock
+  )
 }
 
 const CWS_URL =

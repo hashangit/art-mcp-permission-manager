@@ -37,7 +37,7 @@ export function App() {
     <div class="p-4">
       <div class="mb-4">
         <h1 class="text-xl font-bold text-gray-800 dark:text-gray-100">
-          CORS Unblock Rules
+          ART MCP Permission Manager Rules
         </h1>
         <p class="text-sm text-gray-600 dark:text-gray-400">
           Manage your cross-origin permissions

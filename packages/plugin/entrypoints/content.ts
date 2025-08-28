@@ -1,11 +1,12 @@
 import { messaging } from '@/lib/messaging'
-import { internalMessaging } from 'cors-unblock/internal'
+import { internalMessaging } from 'art-mcp-permission-manager/internal'
 import { isMobile } from 'is-mobile'
 
 export default defineContentScript({
   matches: ['<all_urls>'],
   runAt: 'document_start',
   async main() {
+    document.documentElement.dataset.artMcpPermissionManager = 'true'
     document.documentElement.dataset.corsUnblock = 'true'
 
     internalMessaging.onMessage('getAllowedInfo', () =>

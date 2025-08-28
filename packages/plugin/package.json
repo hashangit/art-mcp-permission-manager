@@ -1,6 +1,6 @@
 {
-  "name": "@cors-unblock/plugin",
-  "description": "Enable cross-origin requests for web applications with precise domain control and user-friendly permission management.",
+  "name": "@art-mcp/permission-manager-extension",
+  "description": "ART MCP Permission Manager browser extension.",
   "private": true,
   "version": "0.3.2",
   "type": "module",
@@ -32,7 +32,7 @@
   "devDependencies": {
     "@vitest/browser": "^3.1.1",
     "@wxt-dev/module-solid": "^1.1.2",
-    "cors-unblock": "workspace:^",
+    "art-mcp-permission-manager": "workspace:^",
     "dotenv": "^16.5.0",
     "playwright": "^1.52.0",
     "typescript": "^5.6.3",

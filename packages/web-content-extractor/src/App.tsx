@@ -1,5 +1,11 @@
 import { createSignal, createEffect } from 'solid-js'
-import { hasInstall, install, getAllowedInfo, requestHosts } from 'cors-unblock'
+import {
+  hasInstall,
+  install,
+  getAllowedInfo,
+  requestHosts,
+  getInstallUrl,
+} from 'art-mcp-permission-manager'
 import { Readability } from '@mozilla/readability'
 import TurndownService from 'turndown'
 import { useMutation } from '@tanstack/solid-query'
@@ -52,9 +58,12 @@ function App() {
       }
 
       if (!hasInstall()) {
-        alert('Please install the CORS Unblock extension')
-        install()
-        throw new Error('Please install the CORS Unblock extension')
+        const opened = install({ browser: 'auto' })
+        if (!opened) {
+          const url = getInstallUrl()
+          alert('Please install the extension: ' + url)
+        }
+        throw new Error('Extension not installed')
       }
 
       const allowedInfo = await getAllowedInfo()
@@ -69,7 +78,7 @@ function App() {
           hosts: [hostname],
         })
         if (result !== 'accept') {
-          throw new Error(`Please allow CORS Unblock to access ${hostname}`)
+          throw new Error(`Please allow extension to access ${hostname}`)
         }
       }
 

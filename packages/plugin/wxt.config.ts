@@ -5,11 +5,11 @@ export default defineConfig({
   modules: ['@wxt-dev/module-solid'],
   manifestVersion: 3,
   zip: {
-    name: 'cors-unblock',
+    name: 'art-mcp-permission-manager',
   },
   manifest: (env) => {
     const manifest: UserManifest = {
-      name: 'CORS Unblock',
+      name: 'ART MCP Permission Manager',
       description:
         'Web apps cross-origin access with precise domain control and simple permissions.',
       permissions: ['storage', 'tabs', 'declarativeNetRequest'],
@@ -24,7 +24,7 @@ export default defineConfig({
     if (env.browser === 'firefox') {
       manifest.browser_specific_settings = {
         gecko: {
-          id: 'cors-unblock@rxliuli.com',
+          id: 'art-mcp-permission-manager@rxliuli.com',
         },
       }
     }

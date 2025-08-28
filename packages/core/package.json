@@ -1,6 +1,6 @@
 {
   "name": "art-mcp-permission-manager",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "type": "module",
   "description": "ART MCP Permission Manager core SDK (fork of CORS Unblock). Provides install helpers and website↔extension messaging for managed CORS permissions.",

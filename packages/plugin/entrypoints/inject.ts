@@ -1,6 +1,6 @@
 import { deserializeResponse, serializeRequest } from '@/lib/serialize'
 import { Vista } from '@rxliuli/vista'
-import { internalMessaging } from 'cors-unblock/internal'
+import { internalMessaging } from 'art-mcp-permission-manager/internal'
 
 export default defineUnlistedScript(() => {
   new Vista()

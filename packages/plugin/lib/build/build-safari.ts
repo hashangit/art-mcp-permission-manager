@@ -6,12 +6,12 @@ import dotenv from 'dotenv'
 const rootPath = path.resolve(__dirname, '../..')
 dotenv.config({ path: path.resolve(rootPath, '.env.local') })
 
-const ProjectName = 'CORS Unblock'
+const ProjectName = 'ART MCP Permission Manager'
 const AppCategory = 'public.app-category.developer-tools'
 const DevelopmentTeam = process.env.DEVELOPMENT_TEAM
 
 await $`pnpm wxt build -b safari`
-await $`xcrun safari-web-extension-converter --bundle-identifier com.rxliuli.corsUnblock --force --project-location .output .output/safari-mv3`
+await $`xcrun safari-web-extension-converter --bundle-identifier com.rxliuli.artMcpPermissionManager --force --project-location .output .output/safari-mv3`
 async function updateProjectConfig() {
   const projectConfigPath = path.resolve(
     rootPath,
@@ -29,23 +29,23 @@ async function updateProjectConfig() {
         `INFOPLIST_KEY_CFBundleDisplayName = ("?${ProjectName}"?);`,
         'g',
       ),
-      `INFOPLIST_KEY_CFBundleDisplayName = $1;\n				INFOPLIST_KEY_LSApplicationCategoryType = "${AppCategory}";`,
+      `INFOPLIST_KEY_CFBundleDisplayName = $1;\n\t\t\t\tINFOPLIST_KEY_LSApplicationCategoryType = "${AppCategory}";`,
     )
     .replace(
       new RegExp(`GCC_WARN_UNUSED_VARIABLE = YES;`, 'g'),
-      `GCC_WARN_UNUSED_VARIABLE = YES;\n				INFOPLIST_KEY_LSApplicationCategoryType = "${AppCategory}";`,
+      `GCC_WARN_UNUSED_VARIABLE = YES;\n\t\t\t\tINFOPLIST_KEY_LSApplicationCategoryType = "${AppCategory}";`,
     )
     .replace(
       new RegExp(
         `INFOPLIST_KEY_CFBundleDisplayName = ("?${ProjectName}"?);`,
         'g',
       ),
-      `INFOPLIST_KEY_CFBundleDisplayName = $1;\n				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;`,
+      `INFOPLIST_KEY_CFBundleDisplayName = $1;\n\t\t\t\tINFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;`,
     )
     .replaceAll(
       `COPY_PHASE_STRIP = NO;`,
       DevelopmentTeam
-        ? `COPY_PHASE_STRIP = NO;\n				DEVELOPMENT_TEAM = ${DevelopmentTeam};`
+        ? `COPY_PHASE_STRIP = NO;\n\t\t\t\tDEVELOPMENT_TEAM = ${DevelopmentTeam};`
         : 'COPY_PHASE_STRIP = NO;',
     )
     .replace(
@@ -66,7 +66,7 @@ async function updateInfoPlist() {
       path.resolve(projectPath, file),
       content.replaceAll(
         '</dict>\n</plist>',
-        '	<key>CFBundleVersion</key>\n	<string>$(CURRENT_PROJECT_VERSION)</string>\n</dict>\n</plist>',
+        '\t<key>CFBundleVersion</key>\n\t<string>$(CURRENT_PROJECT_VERSION)</string>\n</dict>\n</plist>',
       ),
     )
   }
